@@ -132,3 +132,42 @@ exports.changeEmail = (req, res) => {
 		})
 	})
 }
+
+// 验证账户和与邮箱是否一致 email account
+exports.verifyAccountAndEmail = (req, res) => {
+	const {
+		account,
+		email
+	} = req.body
+	const sql = 'select * from users where account = ?'
+	db.query(sql, account, (err, result) => {
+		if (err) return res.cc(err)
+		// res.send(result[0].email)
+		if (email == result[0].email) {
+			res.send({
+				status: 0,
+				message: '查询成功',
+				id:result[0].id
+			})
+		} else {
+			res.send({
+				status: 1,
+				message: '查询失败'
+			})
+		}
+	})
+}
+
+// 登录页面修改密码 参数 newPassword id
+exports.changePasswordInLogin = (req,res) =>{
+	const user = req.body
+	user.newPassword = bcrypt.hashSync(user.newPassword, 10)
+	const sql = 'update users set password = ? where id = ?'
+	db.query(sql,[user.newPassword,user.id],(err,result)=>{
+		if (err) return res.cc(err)
+		res.send({
+			status: 0,
+			message: '更新成功'
+		})
+	})
+}

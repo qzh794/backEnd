@@ -12,6 +12,7 @@ const {
 	password_limit,
 	name_limit,
 	email_limit,
+	forgetPassword_limit,
 } = require('../limit/user.js')
 
 // 上传头像
@@ -28,5 +29,9 @@ router.post('/changeName', expressJoi(name_limit), userinfoHandler.changeName)
 router.post('/changeSex', userinfoHandler.changeSex)
 // 修改邮箱
 router.post('/changeEmail', expressJoi(email_limit), userinfoHandler.changeEmail)
+// 验证账号与邮箱 verifyAccountAndEmail
+router.post('/verifyAccountAndEmail', userinfoHandler.verifyAccountAndEmail)
+// 登录页面修改密码 changePasswordInLogin
+router.post('/changePasswordInLogin', expressJoi(forgetPassword_limit),userinfoHandler.changePasswordInLogin)
 // 向外暴露路由
 module.exports = router
