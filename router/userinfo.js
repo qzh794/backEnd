@@ -25,7 +25,7 @@ router.post('/changePassword', expressJoi(password_limit), userinfoHandler.chang
 router.post('/getUserInfo', userinfoHandler.getUserInfo)
 // 修改姓名 changeName
 router.post('/changeName', expressJoi(name_limit), userinfoHandler.changeName)
-// 修改姓名 
+// 修改性别
 router.post('/changeSex', userinfoHandler.changeSex)
 // 修改邮箱
 router.post('/changeEmail', expressJoi(email_limit), userinfoHandler.changeEmail)

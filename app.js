@@ -13,32 +13,38 @@ app.use(cors())
 // Multer 是一个 node.js 中间件，用于处理 multipart/form-data 类型的表单数据，它主要用于上传文件。
 const multer = require("multer");
 // 在server服务端下新建一个public文件，在public文件下新建upload文件用于存放图片
-const upload = multer({ dest:'./public/upload' })
+const upload = multer({
+	dest: './public/upload'
+})
 app.use(upload.any())
 // 静态托管
 app.use(express.static("./public"));
 
 // parse application/x-www-form-urlencoded
 // 当extended为false时，值为数组或者字符串，当为ture时，值可以为任意类型
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.urlencoded({
+	extended: false
+}))
 
 // parse application/json
 app.use(bodyParser.json())
 
-app.use((req,res,next)=>{
+app.use((req, res, next) => {
 	// status=0为成功,=1为失败,默认设为1,方便处理失败的情况
-	res.cc = (err,status=1)=>{
+	res.cc = (err, status = 1) => {
 		res.send({
 			status,
 			// 判断这个error是错误对象还是字符串
-			message:err instanceof Error ? err.message : err,
+			message: err instanceof Error ? err.message : err,
 		})
 	}
 	next()
 })
 
 const jwtconfig = require('./jwt_config/index.js')
-const {expressjwt:jwt} = require('express-jwt')
+const {
+	expressjwt: jwt
+} = require('express-jwt')
 // app.use(jwt({
 // 	secret:jwtconfig.jwtSecretKey,algorithms:['HS256']
 // }).unless({
@@ -47,14 +53,16 @@ const {expressjwt:jwt} = require('express-jwt')
 
 const loginRouter = require('./router/login')
 const Joi = require('joi')
-app.use('/api',loginRouter)
+app.use('/api', loginRouter)
 const userRouter = require('./router/userinfo.js')
-app.use('/user',userRouter)
+app.use('/user', userRouter)
+const setRouter = require('./router/setting.js')
+app.use('/set', setRouter)
 
 
 // 对不符合joi规则的情况进行报错
-app.use((req,res,next)=>{
-	if(err instanceof Joi.ValidationError) return res.cc(err)
+app.use((req, res, next) => {
+	if (err instanceof Joi.ValidationError) return res.cc(err)
 })
 
 // 绑定和侦听指定的主机和端口
