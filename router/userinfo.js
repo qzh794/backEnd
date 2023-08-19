@@ -33,5 +33,27 @@ router.post('/changeEmail', expressJoi(email_limit), userinfoHandler.changeEmail
 router.post('/verifyAccountAndEmail', userinfoHandler.verifyAccountAndEmail)
 // 登录页面修改密码 changePasswordInLogin
 router.post('/changePasswordInLogin', expressJoi(forgetPassword_limit),userinfoHandler.changePasswordInLogin)
+// ---------------用户管理
+// 添加管理员
+router.post('/createAdmin',userinfoHandler.createAdmin)
+// 获取管理员列表
+router.post('/getAdminList',userinfoHandler.getAdminList)
+// 编辑管理员账号信息
+router.post('/editAdmin',userinfoHandler.editAdmin)
+// 对管理员取消赋权
+router.post('/changeIdentityToUser',userinfoHandler.changeIdentityToUser)
+// 对用户进行赋权
+router.post('/changeIdentityToAdmin',userinfoHandler.changeIdentityToAdmin)
+// 通过账号对用户搜索
+router.post('/searchUser',userinfoHandler.searchUser)
+// 冻结用户
+router.post('/banUser',userinfoHandler.banUser)
+// 解冻用户
+router.post('/hotUser',userinfoHandler.hotUser)
+// 获取冻结用户列表
+router.post('/getBanList',userinfoHandler.getBanList)
+// 删除用户 deleteUser
+router.post('/deleteUser',userinfoHandler.deleteUser)
+
 // 向外暴露路由
 module.exports = router
