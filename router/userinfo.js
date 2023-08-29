@@ -46,6 +46,8 @@ router.post('/changeIdentityToUser',userinfoHandler.changeIdentityToUser)
 router.post('/changeIdentityToAdmin',userinfoHandler.changeIdentityToAdmin)
 // 通过账号对用户搜索
 router.post('/searchUser',userinfoHandler.searchUser)
+// 通过部门对用户搜索
+router.post('/searchUserByDepartment',userinfoHandler.searchUserByDepartment)
 // 冻结用户
 router.post('/banUser',userinfoHandler.banUser)
 // 解冻用户

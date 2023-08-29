@@ -174,6 +174,7 @@ exports.changePasswordInLogin = (req, res) => {
 }
 
 // ----------------------------------------用户管理
+// 添加管理员
 exports.createAdmin = (req, res) => {
 	const {
 		account,
@@ -194,14 +195,14 @@ exports.createAdmin = (req, res) => {
 				message: '账号已存在'
 			})
 		}
-		let password = bcrypt.hashSync(password, 10)
+		const hashpassword = bcrypt.hashSync(password, 10)
 		// 第四步,把账号跟密码插入到users表里面
 		const sql1 = 'insert into users set ?'
 		// 创建时间
 		const create_time = new Date()
 		db.query(sql1, {
 			account,
-			password,
+			password: hashpassword,
 			name,
 			sex,
 			department,
@@ -222,7 +223,7 @@ exports.createAdmin = (req, res) => {
 				})
 			}
 			res.send({
-				status: 1,
+				status: 0,
 				message: '添加管理员成功'
 			})
 		})
@@ -234,6 +235,12 @@ exports.getAdminList = (req, res) => {
 	const sql = 'select * from users where identity = ?'
 	db.query(sql, req.body.identity, (err, result) => {
 		if (err) return res.cc(err)
+		result.forEach((e)=>{
+			e.password = ''
+			e.create_time = ''
+			e.image_url = ''
+			e.status = ''
+		})
 		res.send(result)
 	})
 }
@@ -260,7 +267,7 @@ exports.editAdmin = (req, res) => {
 	db.query(sql, [updateContent, updateContent.id], (err, result) => {
 		if (err) return res.cc(err)
 		res.send({
-			status: 1,
+			status: 0,
 			message: '修改管理员信息成功'
 		})
 	})
@@ -273,7 +280,7 @@ exports.changeIdentityToUser = (req, res) => {
 	db.query(sql, [identity, req.body.id], (err, result) => {
 		if (err) return res.cc(err)
 		res.send({
-			status: 1,
+			status: 0,
 			message: '降级成功'
 		})
 	})
@@ -285,7 +292,7 @@ exports.changeIdentityToAdmin = (req, res) => {
 	db.query(sql, [req.body.identity, req.body.id], (err, result) => {
 		if (err) return res.cc(err)
 		res.send({
-			status: 1,
+			status: 0,
 			message: '赋权成功'
 		})
 	})
@@ -296,18 +303,40 @@ exports.searchUser = (req, res) => {
 	const sql = 'select * from users where account = ?'
 	db.query(sql, req.body.account, (err, result) => {
 		if (err) return res.cc(err)
+		result.forEach((e)=>{
+			e.password = ''
+			e.create_time = ''
+			e.image_url = ''
+			e.status = ''
+		})
 		res.send(result)
 	})
 }
 
-// 冻结用户 把status 置为 1
+// 通过部门对用户搜索 department
+exports.searchUserByDepartment = (req, res) => {
+	const sql = 'select * from users where department = ?'
+	db.query(sql, req.body.department, (err, result) => {
+		if (err) return res.cc(err)
+		result.forEach((e)=>{
+			e.password = ''
+			e.create_time = ''
+			e.image_url = ''
+			e.status = ''
+		})
+		res.send(result)
+	})
+}
+
+
+// 冻结用户 通过id 把status 置为 1 
 exports.banUser = (req, res) => {
 	const status = 1
 	const sql = 'update users set status = ? where id = ?'
 	db.query(sql, [status, req.body.id], (err, result) => {
 		if (err) return res.cc(err)
 		res.send({
-			status: 1,
+			status: 0,
 			message: '冻结成功'
 		})
 	})
@@ -322,8 +351,8 @@ exports.hotUser = (req, res) => {
 	db.query(sql, [status, req.body.id], (err, result) => {
 		if (err) return res.cc(err)
 		res.send({
-			status: 1,
-			message: '冻结成功'
+			status: 0,
+			message: '解冻成功'
 		})
 	})
 }
@@ -339,17 +368,16 @@ exports.getBanList = (req, res) => {
 
 // 删除用户 id account
 exports.deleteUser = (req, res) => {
-	const sql = 'delete form users where id = ?' 
-	db.query(sql, req.body.id,(err, result) => {
+	const sql = 'delete from users where id = ?'
+	db.query(sql, req.body.id, (err, result) => {
 		if (err) return res.cc(err)
-		const sql1 = 'delete form image where account = ?'
-		db.query(sql1, req.body.id,(err, result) => {
+		const sql1 = 'delete from image where account = ?'
+		db.query(sql1, req.body.account, (err, result) => {
 			if (err) return res.cc(err)
 			res.send({
-				status: 1,
+				status: 0,
 				message: '删除用户成功'
 			})
 		})
-
 	})
 }
