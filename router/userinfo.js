@@ -56,6 +56,10 @@ router.post('/hotUser',userinfoHandler.hotUser)
 router.post('/getBanList',userinfoHandler.getBanList)
 // 删除用户 deleteUser
 router.post('/deleteUser',userinfoHandler.deleteUser)
+// 获取对应身份的一个总人数
+router.post('/getAdminListLength',userinfoHandler.getAdminListLength)
+// 监听换页返回数据
+router.post('/returnListData',userinfoHandler.returnListData)
 
 // 向外暴露路由
 module.exports = router

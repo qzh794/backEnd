@@ -235,7 +235,7 @@ exports.getAdminList = (req, res) => {
 	const sql = 'select * from users where identity = ?'
 	db.query(sql, req.body.identity, (err, result) => {
 		if (err) return res.cc(err)
-		result.forEach((e)=>{
+		result.forEach((e) => {
 			e.password = ''
 			e.create_time = ''
 			e.image_url = ''
@@ -288,8 +288,9 @@ exports.changeIdentityToUser = (req, res) => {
 
 // 对用户进行赋权 参数 id identity
 exports.changeIdentityToAdmin = (req, res) => {
-	const sql = 'update users set identity = ? where id = ?'
-	db.query(sql, [req.body.identity, req.body.id], (err, result) => {
+	const date = new Date()
+	const sql = 'update users set identity = ?,update_time = ? where id = ?'
+	db.query(sql, [req.body.identity, date, req.body.id], (err, result) => {
 		if (err) return res.cc(err)
 		res.send({
 			status: 0,
@@ -303,7 +304,7 @@ exports.searchUser = (req, res) => {
 	const sql = 'select * from users where account = ?'
 	db.query(sql, req.body.account, (err, result) => {
 		if (err) return res.cc(err)
-		result.forEach((e)=>{
+		result.forEach((e) => {
 			e.password = ''
 			e.create_time = ''
 			e.image_url = ''
@@ -315,14 +316,12 @@ exports.searchUser = (req, res) => {
 
 // 通过部门对用户搜索 department
 exports.searchUserByDepartment = (req, res) => {
-	const sql = 'select * from users where department = ?'
+	const sql = 'select * from users where department = ? and identity = "用户"'
 	db.query(sql, req.body.department, (err, result) => {
 		if (err) return res.cc(err)
-		result.forEach((e)=>{
+		result.forEach((e) => {
 			e.password = ''
-			e.create_time = ''
 			e.image_url = ''
-			e.status = ''
 		})
 		res.send(result)
 	})
@@ -379,5 +378,27 @@ exports.deleteUser = (req, res) => {
 				message: '删除用户成功'
 			})
 		})
+	})
+}
+
+// 获取对应身份的一个总人数 identity
+exports.getAdminListLength = (req, res) => {
+	const sql = 'select * from users where identity = ? '
+	db.query(sql, req.body.identity, (err, result) => {
+		if (err) return res.cc(err)
+		res.send({
+			length: result.length
+		})
+	})
+}
+
+// 监听换页返回数据 页码 pager identity
+// limit 10 为我们要拿到数据 offset 我们跳过多少条数据
+exports.returnListData = (req, res) => {
+	const number = (req.body.pager -1)*10
+	const sql = `select * from users where identity = ? ORDER BY create_time limit 10 offset ${number} `
+	db.query(sql, req.body.identity, (err, result) => {
+		if (err) return res.cc(err)
+		res.send(result)
 	})
 }
