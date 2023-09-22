@@ -45,25 +45,35 @@ exports.createProduct = (req, res) => {
 	} = req.body
 	const product_create_time = new Date()
 	const product_all_price = product_inwarehouse_number * 1 * product_single_price * 1
-	const sql = 'insert into product set ?'
-	db.query(sql, {
-		product_id,
-		product_name,
-		product_category,
-		product_unit,
-		product_inwarehouse_number,
-		product_single_price,
-		product_all_price,
-		product_create_person,
-		product_create_time,
-		in_memo,
-	}, (err, result) => {
-		if (err) return res.cc(err)
-		res.send({
-			status: 0,
-			message: '添加产品成功'
+	const sql0 = 'select * from prduct where product_id = ?'
+	db.query(sql0, product_id, (err, res) => {
+		if (res.length > 0) {
+			res.send({
+				status: 1,
+				message: '产品编号已存在'
+			})
+		}
+		const sql = 'insert into product set ?'
+		db.query(sql, {
+			product_id,
+			product_name,
+			product_category,
+			product_unit,
+			product_inwarehouse_number,
+			product_single_price,
+			product_all_price,
+			product_create_person,
+			product_create_time,
+			in_memo,
+		}, (err, result) => {
+			if (err) return res.cc(err)
+			res.send({
+				status: 0,
+				message: '添加产品成功'
+			})
 		})
 	})
+
 }
 
 // 删除产品
@@ -135,23 +145,33 @@ exports.applyOutProduct = (req, res) => {
 	} = req.body
 	const product_apply_time = new Date()
 	const product_out_price = product_out_number * 1 * product_single_price * 1
-	const sql =
-		'update product set product_out_status = ?,product_out_id=?,product_out_number=?,product_out_price=?,product_out_apply_person=?,apply_memo=?,product_apply_time= ? where id = ?'
-	db.query(sql, [
-		product_out_status,
-		product_out_id,
-		product_out_number,
-		product_out_price,
-		product_out_apply_person,
-		apply_memo,
-		product_apply_time,
-		id
-	], (err, result) => {
-		if (err) return res.cc(err)
-		res.send({
-			status: 0,
-			message: '申请出库成功'
-		})
+	const sql0 = 'select * from product where product_out_id = ?'
+	db.query(sql0, product_out_id, (err, result) => {
+		if (result.length > 0) {
+			res.send({
+				status: 1,
+				message: '申请出库编号已存在'
+			})
+		}else{
+			const sql =
+				'update product set product_out_status = ?,product_out_id=?,product_out_number=?,product_out_price=?,product_out_apply_person=?,apply_memo=?,product_apply_time= ? where id = ?'
+			db.query(sql, [
+				product_out_status,
+				product_out_id,
+				product_out_number,
+				product_out_price,
+				product_out_apply_person,
+				apply_memo,
+				product_apply_time,
+				id
+			], (err, result) => {
+				if (err) return res.cc(err)
+				res.send({
+					status: 0,
+					message: '申请出库成功'
+				})
+			})
+		}
 	})
 }
 
@@ -340,3 +360,4 @@ exports.returnOutProductListData = (req, res) => {
 		res.send(result)
 	})
 }
+

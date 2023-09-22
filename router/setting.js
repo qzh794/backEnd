@@ -25,6 +25,10 @@ router.post('/getAllCompanyIntroduce', setHandler.getAllCompanyIntroduce)
 router.post('/setDepartment', setHandler.setDepartment)
 // 获取部门
 router.post('/getDepartment', setHandler.getDepartment)
+// 产品设置
+router.post('/setProduct', setHandler.setProduct)
+// 获取产品
+router.post('/getProduct', setHandler.getProduct)
 
 // 向外暴露路由
 module.exports = router

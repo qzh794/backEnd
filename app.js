@@ -10,6 +10,7 @@ const cors = require('cors')
 // 全局挂载
 app.use(cors())
 
+
 // Multer 是一个 node.js 中间件，用于处理 multipart/form-data 类型的表单数据，它主要用于上传文件。
 const multer = require("multer");
 // 在server服务端下新建一个public文件，在public文件下新建upload文件用于存放图片
@@ -29,7 +30,7 @@ app.use(bodyParser.urlencoded({
 // parse application/json
 app.use(bodyParser.json())
 
-app.use((req, res, next) => {
+app.use((err,req, res, next) => {
 	// status=0为成功,=1为失败,默认设为1,方便处理失败的情况
 	res.cc = (err, status = 1) => {
 		res.send({
@@ -60,6 +61,14 @@ const setRouter = require('./router/setting.js')
 app.use('/set', setRouter)
 const productRouter = require('./router/product.js')
 app.use('/pro', productRouter)
+const messageRouter = require('./router/message.js')
+app.use('/msg', messageRouter)
+const fileRouter = require('./router/file.js')
+app.use('/file', fileRouter)
+const loginLogRouter = require('./router/login_log.js')
+app.use('/llog', loginLogRouter)
+const operationLogRouter = require('./router/operation_log.js')
+app.use('/olog', operationLogRouter)
 
 
 // 对不符合joi规则的情况进行报错

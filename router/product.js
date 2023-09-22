@@ -42,4 +42,5 @@ router.post('/returnProductListData', productHandler.returnProductListData)
 router.post('/returnApplyProductListData', productHandler.returnApplyProductListData)
 // 监听换页返回数据  申请出库页面
 router.post('/returnOutProductListData', productHandler.returnOutProductListData)
+
 module.exports = router

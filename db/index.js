@@ -1,4 +1,5 @@
 // 导入mysql数据库
+// npm install mysql
 const mysql = require('mysql')
 
 // 创建与数据库的连接
