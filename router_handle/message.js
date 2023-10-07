@@ -45,14 +45,16 @@ exports.publishMessage = (req, res) => {
 		if (err) return res.cc(err)
 		res.send({
 			status: 0,
-			message: '发布消息成功'
+			message: '发布消息成功',
+			department: message_receipt_object,
+			id: result.insertId
 		})
 	})
 }
 
 // 获取公司公告列表
 exports.companyMessageList = (req, res) => {
-	const sql = 'select * from message where message_category = "公司公告" and message_status = "0"'
+	const sql = 'select * from message where message_category = "公司公告" and message_status = "0" order by message_publish_time DESC limit 5'
 	db.query(sql, (err, result) => {
 		if (err) return res.cc(err)
 		res.send(result)
@@ -61,7 +63,7 @@ exports.companyMessageList = (req, res) => {
 
 // 获取系统消息列表
 exports.systemMessageList = (req, res) => {
-	const sql = 'select * from message where message_category = "系统消息" and message_status = "0"'
+	const sql = 'select * from message where message_category = "系统消息" and message_status = "0"  order by message_publish_time DESC limit 5'
 	db.query(sql, (err, result) => {
 		if (err) return res.cc(err)
 		res.send(result)
@@ -243,7 +245,7 @@ exports.getSystemMessageLength = (req, res) => {
 exports.returnCompanyListData = (req, res) => {
 	const number = (req.body.pager - 1) * 10
 	const sql =
-		`select * from message where message_category ="公司公告" ORDER BY message_publish_time limit 10 offset ${number} `
+		`select * from message where message_category ="公司公告" and message_status = 0 ORDER BY message_publish_time limit 10 offset ${number} `
 	db.query(sql, (err, result) => {
 		if (err) return res.cc(err)
 		res.send(result)
@@ -254,7 +256,7 @@ exports.returnCompanyListData = (req, res) => {
 exports.returnSystemListData = (req, res) => {
 	const number = (req.body.pager - 1) * 10
 	const sql =
-		`select * from message where message_category ="系统消息" ORDER BY message_publish_time limit 10 offset ${number} `
+		`select * from message where message_category ="系统消息"  and message_status = 0  ORDER BY message_publish_time limit 10 offset ${number} `
 	db.query(sql, (err, result) => {
 		if (err) return res.cc(err)
 		res.send(result)

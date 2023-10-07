@@ -36,7 +36,7 @@ exports.operationLogList = (req,res) =>{
 
 // 搜索最近十条操作记录
 exports.searchOperationLogList = (req,res) =>{
-	const sql = 'select * from operation_log where operation_person = ? ORDER BY login_time limit 10'
+	const sql = 'select * from operation_log where operation_person = ? ORDER BY operation_time limit 10'
 	db.query(sql,req.body.operation_person,(err,result)=>{
 		if (err) return res.cc(err)
 		res.send(result)

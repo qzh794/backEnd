@@ -254,23 +254,49 @@ exports.editAdmin = (req, res) => {
 		department
 	} = req.body
 	const date = new Date()
-	// 修改的内容
-	const updateContent = {
-		id,
-		name,
-		sex,
-		email,
-		department,
-		update_time: date,
-	}
-	const sql = 'update users set ? where id = ?'
-	db.query(sql, [updateContent, updateContent.id], (err, result) => {
-		if (err) return res.cc(err)
-		res.send({
-			status: 0,
-			message: '修改管理员信息成功'
-		})
+	const sql0 = 'select department from users where id = ?'
+	db.query(sql0, id, (err, result) => {
+		if (result[0].department == department) {
+			// 修改的内容
+			const updateContent = {
+				id,
+				name,
+				sex,
+				email,
+				department,
+				update_time: date,
+			}
+			const sql = 'update users set ? where id = ?'
+			db.query(sql, [updateContent, updateContent.id], (err, result) => {
+				if (err) return res.cc(err)
+				res.send({
+					status: 0,
+					message: '修改管理员信息成功'
+				})
+			})
+		} else {
+			// 修改的内容
+			const updateContent = {
+				id,
+				name,
+				sex,
+				email,
+				department,
+				update_time: date,
+				read_list: null,
+				read_status: 0
+			}
+			const sql = 'update users set ? where id = ?'
+			db.query(sql, [updateContent, updateContent.id], (err, result) => {
+				if (err) return res.cc(err)
+				res.send({
+					status: 0,
+					message: '修改管理员信息成功'
+				})
+			})
+		}
 	})
+
 }
 
 // 对管理员取消赋权 参数 id
@@ -395,7 +421,7 @@ exports.getAdminListLength = (req, res) => {
 // 监听换页返回数据 页码 pager identity
 // limit 10 为我们要拿到数据 offset 我们跳过多少条数据
 exports.returnListData = (req, res) => {
-	const number = (req.body.pager -1)*10
+	const number = (req.body.pager - 1) * 10
 	const sql = `select * from users where identity = ? ORDER BY create_time limit 10 offset ${number} `
 	db.query(sql, req.body.identity, (err, result) => {
 		if (err) return res.cc(err)
