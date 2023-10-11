@@ -54,7 +54,8 @@ exports.publishMessage = (req, res) => {
 
 // 获取公司公告列表
 exports.companyMessageList = (req, res) => {
-	const sql = 'select * from message where message_category = "公司公告" and message_status = "0" order by message_publish_time DESC limit 5'
+	const sql =
+		'select * from message where message_category = "公司公告" and message_status = "0" order by message_publish_time DESC limit 5'
 	db.query(sql, (err, result) => {
 		if (err) return res.cc(err)
 		res.send(result)
@@ -63,7 +64,8 @@ exports.companyMessageList = (req, res) => {
 
 // 获取系统消息列表
 exports.systemMessageList = (req, res) => {
-	const sql = 'select * from message where message_category = "系统消息" and message_status = "0"  order by message_publish_time DESC limit 5'
+	const sql =
+		'select * from message where message_category = "系统消息" and message_status = "0"  order by message_publish_time DESC limit 5'
 	db.query(sql, (err, result) => {
 		if (err) return res.cc(err)
 		res.send(result)
@@ -80,25 +82,89 @@ exports.editMessage = (req, res) => {
 		message_level,
 		id
 	} = req.body
-	const message_update_time = new Date()
-	const sql =
-		'update message set message_title = ?,message_publish_name= ?,message_content = ? ,message_receipt_object = ?,message_level= ?,message_update_time= ? where id = ?'
-	db.query(sql, [
-		message_title,
-		message_publish_name,
-		message_content,
-		message_receipt_object,
-		message_level,
-		message_update_time,
-		id
-	], (err, result) => {
-		if (err) return res.cc(err)
-		res.send({
-			status: 0,
-			message: '编辑消息成功'
+	// 通过id返回消息之前的部门
+	const returnOldDepartment = id =>{
+		return new Promise(resolve=>{
+			const sql = 'select message_receipt_object from message where id = ?'
+			db.query(sql,id,(err,result)=>{
+				resolve(result[0].message_receipt_object)
+			})
 		})
-	})
+	}
+	// 对消息更改之后的接受部门的所有用户的Read_list进行一个添加id的操作，参数 newDepartment 消息 newid
+	const pushIdInReadList = (newDepartment,newid) =>{
+		const sql = 'select read_list,read_status,id from users where department = ?'
+		db.query(sql, newDepartment, (err, result) => {
+			if (err) return res.cc(err)
+			result.forEach((e) => {
+				if (e.read_status == 1) {
+					let arr = JSON.parse(e.read_list)
+					arr.push(JSON.parse(newid))
+					arr = JSON.stringify(arr)
+					const sql1 = 'update users set read_list = ? where id = ?'
+					db.query(sql1, [arr, e.id], (err, result) => {})
+				}
+			})
+		})
+	}
+	
+	// 把之前的接受部门的所有用户的ReadList里面的id删掉，参数 oldDepartment deleteid
+	const deleteIdInReadList = (oldDepartment,deleteid) =>{
+		const sql = 'select read_list,read_status,id from users where department = ?'
+		db.query(sql, oldDepartment, (err, result) => {
+			if (err) return res.cc(err)
+			result.forEach((e) => {
+				if (e.read_status == 1) {
+					let arr = JSON.parse(e.read_list)
+					arr = arr.filter(item => {
+						return item != deleteid
+					})
+					arr = JSON.stringify(arr)
+					const sql1 = 'update users set read_list = ? where id = ?'
+					db.query(sql1, [arr, e.id], (err, result) => {})
+				}
+			})
+		})
+	}
+	
+	// 执行更新操作
+	async function change(){
+		const receiptObj = await returnOldDepartment(id)
+		// 如果返回的部门与修改后的部门不同，并且不等于全体成员
+		if(receiptObj!=='全体成员'&&receiptObj!==message_receipt_object){
+			pushIdInReadList(message_receipt_object,id)
+			deleteIdInReadList(receiptObj,id)
+		}
+		// 如果要把消息从原来的部门修改为全体成员
+		if(message_receipt_object=='全体成员'&&receiptObj!==message_receipt_object){
+			deleteIdInReadList(receiptObj,id)
+		}
+		// 如果原来的消息面对的是全体成员，就需要对新的接收部门的用户的read_list加上id
+		if(receiptObj=='全体成员'&&receiptObj!==message_receipt_object){
+			pushIdInReadList(message_receipt_object,id)
+		}
+		const message_update_time = new Date()
+		const sql =
+			'update message set message_title = ?,message_publish_name= ?,message_content = ? ,message_receipt_object = ?,message_level= ?,message_update_time= ? where id = ?'
+		db.query(sql, [
+			message_title,
+			message_publish_name,
+			message_content,
+			message_receipt_object,
+			message_level,
+			message_update_time,
+			id
+		], (err, result) => {
+			if (err) return res.cc(err)
+			res.send({
+				status: 0,
+				message: '编辑消息成功'
+			})
+		})
+	}
+	change()
 }
+
 
 // 根据发布部门进行获取消息
 exports.searchMessageBydepartment = (req, res) => {
