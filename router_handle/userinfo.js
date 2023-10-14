@@ -57,7 +57,7 @@ exports.changePassword = (req, res) => {
 		// bcrypt
 		const compareResult = bcrypt.compareSync(req.body.oldPassword, result[0].password)
 		if (!compareResult) {
-			res.send({
+			return res.send({
 				status: 1,
 				message: '原密码错误'
 			})
