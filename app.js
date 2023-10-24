@@ -30,7 +30,7 @@ app.use(bodyParser.urlencoded({
 // parse application/json
 app.use(bodyParser.json())
 
-app.use((err,req, res, next) => {
+app.use((req, res, next) => {
 	// status=0为成功,=1为失败,默认设为1,方便处理失败的情况
 	res.cc = (err, status = 1) => {
 		res.send({
