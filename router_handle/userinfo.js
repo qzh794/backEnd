@@ -325,10 +325,11 @@ exports.changeIdentityToAdmin = (req, res) => {
 	})
 }
 
-// 通过账号对用户搜索 account
+// 通过账号对用户搜索 account identity
 exports.searchUser = (req, res) => {
-	const sql = 'select * from users where account = ?'
-	db.query(sql, req.body.account, (err, result) => {
+	const {account,identity} = req.body
+	const sql = 'select * from users where account = ? and identity = ?'
+	db.query(sql, [account,identity], (err, result) => {
 		if (err) return res.cc(err)
 		result.forEach((e) => {
 			e.password = ''

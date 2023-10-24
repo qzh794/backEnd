@@ -135,10 +135,14 @@ exports.searchFlie = (req, res) => {
 	})
 }
 
-// 删除文件
+// 删除文件 id file_name
 exports.deleteFlie = (req, res) => {
 	const sql = `delete from files where id = ? `
 	db.query(sql, req.body.id, (err, result) => {
+		// 使用fsd unlink对文件进行删除
+		fs.unlink(`./public/upload/${req.body.file_name}`,(err)=>{
+			if (err) return res.cc(err)
+		})
 		if (err) return res.cc(err)
 		res.send({
 			status: 0,
