@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken')
 const jwtconfig = require('../jwt_config/index.js')
 
 exports.register = (req,res) =>{
-	// req是前端传过来的数据,也就是request,res是返回给前端的数据,也就是result
+	// req是前端传过来的数据,也就是request,res是返回给前端的数据,也就是response
 	const reginfo = req.body
 	// 第一步,判断前端传过来的数据有没有空
 	if(!reginfo.account||!reginfo.password){
