@@ -78,6 +78,7 @@ exports.getAllCompanyIntroduce = (req, res) => {
 	const sql = 'select * from setting where set_name like "公司%" '
 	db.query(sql, (err, result) => {
 		if (err) return res.cc(err)
+		result = result.slice(1)
 		res.send(result)
 	})
 }

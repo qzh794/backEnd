@@ -126,7 +126,7 @@ exports.returnFilesListData = (req, res) => {
 
 
 // 搜索文件 模糊搜索
-exports.searchFlie = (req, res) => {
+exports.searchFile = (req, res) => {
 	const file_name = req.body.file_name
 	const sql = `select * from files where file_name like '%${file_name}%' `
 	db.query(sql, (err, result) => {
@@ -136,7 +136,7 @@ exports.searchFlie = (req, res) => {
 }
 
 // 删除文件 id file_name
-exports.deleteFlie = (req, res) => {
+exports.deleteFile = (req, res) => {
 	const sql = `delete from files where id = ? `
 	db.query(sql, req.body.id, (err, result) => {
 		// 使用fsd unlink对文件进行删除

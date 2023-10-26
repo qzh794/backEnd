@@ -51,7 +51,7 @@ exports.getReadListAndStatus = (req, res) => {
 	})
 }
 
-// 用户点击消息后,对read_list内的数据进行删减 参数 消息的readid 以及 用户的id
+// 用户点击消息后,对read_list内的数据进行删减 参数 消息的readId 以及 用户的id
 exports.clickDelete = (req, res) => {
 	const sql = 'select read_list from users where id = ?'
 	db.query(sql, req.body.id, (err, result) => {
@@ -59,7 +59,7 @@ exports.clickDelete = (req, res) => {
 		// 第一步 需要把我们获取到的read_list 变成 JSON对象 
 		// 第二步 对这个read_list进行一个过滤
 		// 第三步 使用JSON.stringify 变回原样 同时，update 这个用户的 read_list
-		list = JSON.stringify(JSON.parse(result[0].read_list).filter(item => item != req.body.readid))
+		list = JSON.stringify(JSON.parse(result[0].read_list).filter(item => item != req.body.readId))
 		const sql1 = 'update users set read_list = ? where id = ?'
 		db.query(sql1, [list, req.body.id], (err, result) => {
 			if (err) return res.cc(err)

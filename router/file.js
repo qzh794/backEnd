@@ -22,7 +22,7 @@ router.post('/fileListLength', fileHandler.fileListLength)
 // 监听换页返回数据 文件列表
 router.post('/returnFilesListData', fileHandler.returnFilesListData)
 // 搜索文件
-router.post('/searchFlie', fileHandler.searchFlie)
+router.post('/searchFile', fileHandler.searchFile)
 // 删除文件
-router.post('/deleteFlie', fileHandler.deleteFlie)
+router.post('/deleteFile', fileHandler.deleteFile)
 module.exports = router
