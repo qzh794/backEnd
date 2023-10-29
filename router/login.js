@@ -17,6 +17,8 @@ const {
 router.post('/register',expressJoi(login_limit),loginHandler.register)
 // 登录
 router.post('/login',expressJoi(login_limit),loginHandler.login)
+// 返回用户路由列表
+router.post('/returnMenuList',loginHandler.returnMenuList)
 
 // 向外暴露路由
 module.exports = router
