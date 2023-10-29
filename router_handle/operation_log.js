@@ -56,7 +56,7 @@ exports.operationLogListLength = (req,res) =>{
 
 // 监听换页返回数据  操作日志列表
 // limit 10 为我们要拿到数据 offset 我们跳过多少条数据
-exports.returnOpeartionListData = (req, res) => {
+exports.returnOperationListData = (req, res) => {
 	const number = (req.body.pager - 1) * 10
 	const sql =
 		`select * from operation_log ORDER BY operation_time limit 10 offset ${number} `

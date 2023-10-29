@@ -18,6 +18,6 @@ router.post('/loginLogListLength', loginLogHandler.loginLogListLength)
 // 监听换页返回数据
 router.post('/returnLoginListData', loginLogHandler.returnLoginListData)
 // 清空登录日志
-router.post('/clearloginLogList', loginLogHandler.clearloginLogList)
+router.post('/clearLoginLogList', loginLogHandler.clearLoginLogList)
 
 module.exports = router

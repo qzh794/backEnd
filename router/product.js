@@ -31,7 +31,7 @@ router.post('/searchProductForOutId', productHandler.searchProductForOutId)
 // 获取产品总数
 router.post('/getProductLength', productHandler.getProductLength)
 // 获取申请出库产品总数
-router.post('/getApplyProdcutLength', productHandler.getApplyProdcutLength)
+router.post('/getApplyProductLength', productHandler.getApplyProductLength)
 // 出库产品列表
 router.post('/auditProductList', productHandler.auditProductList)
 // 获取出库产品总数

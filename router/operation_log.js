@@ -16,7 +16,7 @@ router.post('/searchOperationLogList', operationLogHandler.searchOperationLogLis
 // 返回操作日志列表的长度
 router.post('/operationLogListLength', operationLogHandler.operationLogListLength)
 // 监听换页返回数据
-router.post('/returnOpeartionListData', operationLogHandler.returnOpeartionListData)
+router.post('/returnOperationListData', operationLogHandler.returnOperationListData)
 // 清空操作日志
 router.post('/clearOperationLogList', operationLogHandler.clearOperationLogList)
 

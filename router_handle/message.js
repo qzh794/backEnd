@@ -211,7 +211,7 @@ exports.updateClick = (req, res) => {
 }
 
 // 初次删除
-exports.fisrtDelete = (req, res) => {
+exports.firstDelete = (req, res) => {
 	const message_status = 1
 	const message_delete_time = new Date()
 	const sql = 'update message set message_status = ? ,message_delete_time = ? where id = ?'

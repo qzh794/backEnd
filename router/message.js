@@ -23,7 +23,7 @@ router.post('/getMessage', messageHandler.getMessage)
 // 更新点击率
 router.post('/updateClick', messageHandler.updateClick)
 // 初次删除
-router.post('/fisrtDelete', messageHandler.fisrtDelete)
+router.post('/firstDelete', messageHandler.firstDelete)
 // 获取回收站的列表
 router.post('/recycleList', messageHandler.recycleList)
 // 获取回收站总数

@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50726
 File Encoding         : 65001
 
-Date: 2023-10-14 23:32:31
+Date: 2023-10-28 22:01:32
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -28,7 +28,7 @@ CREATE TABLE `files` (
   `upload_time` varchar(255) DEFAULT NULL,
   `download_number` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=18 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=27 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for image
@@ -40,7 +40,7 @@ CREATE TABLE `image` (
   `account` int(255) DEFAULT NULL,
   `onlyId` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for login_log
@@ -53,7 +53,7 @@ CREATE TABLE `login_log` (
   `email` varchar(255) DEFAULT NULL,
   `login_time` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=30 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=41 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for message
@@ -87,7 +87,7 @@ CREATE TABLE `operation_log` (
   `operation_level` varchar(255) DEFAULT NULL,
   `operation_time` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for outproduct
@@ -116,7 +116,7 @@ CREATE TABLE `product` (
   `product_name` varchar(255) DEFAULT NULL,
   `product_category` varchar(255) DEFAULT NULL,
   `product_unit` varchar(255) DEFAULT NULL,
-  `product_inwarehouse_number` int(11) DEFAULT NULL,
+  `product_in_warehouse_number` int(11) DEFAULT NULL,
   `product_single_price` int(11) DEFAULT NULL,
   `product_all_price` int(11) DEFAULT NULL,
   `product_status` varchar(255) DEFAULT NULL,

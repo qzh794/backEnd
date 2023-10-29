@@ -8,7 +8,7 @@ const db = require('../db/index')
  * product_name 产品名称 varchar
  * product_category 产品类别  varchar
  * product_unit 产品单位 varchar
- * product_inwarehouse_number 产品入库数量 库存 int
+ * product_in_warehouse_number 产品入库数量 库存 int
  * product_single_price 产品入库单价 int
  * product_all_price 产品入库总价 int
  * product_status 库存状态 100-300为正常 100以下为库存告急 300以上为过剩 varchar
@@ -29,7 +29,7 @@ const db = require('../db/index')
  * audit_memo 出库/审核备注 varchar
  * 
  */
-// memorary就是备忘录的意思
+// memory就是备忘录的意思
 
 // 产品入库 创建产品
 exports.createProduct = (req, res) => {
@@ -38,14 +38,14 @@ exports.createProduct = (req, res) => {
 		product_name,
 		product_category,
 		product_unit,
-		product_inwarehouse_number,
+		product_in_warehouse_number,
 		product_single_price,
 		product_create_person,
 		in_memo
 	} = req.body
 	const product_create_time = new Date()
-	const product_all_price = product_inwarehouse_number * 1 * product_single_price * 1
-	const sql0 = 'select * from prduct where product_id = ?'
+	const product_all_price = product_in_warehouse_number * 1 * product_single_price
+	const sql0 = 'select * from product where product_id = ?'
 	db.query(sql0, product_id, (err, res) => {
 		if (res.length > 0) {
 			res.send({
@@ -59,7 +59,7 @@ exports.createProduct = (req, res) => {
 			product_name,
 			product_category,
 			product_unit,
-			product_inwarehouse_number,
+			product_in_warehouse_number,
 			product_single_price,
 			product_all_price,
 			product_create_person,
@@ -95,20 +95,20 @@ exports.editProduct = (req, res) => {
 		product_name,
 		product_category,
 		product_unit,
-		product_inwarehouse_number,
+		product_in_warehouse_number,
 		product_single_price,
 		in_memo,
 		id
 	} = req.body
 	const product_update_time = new Date()
-	const product_all_price = product_inwarehouse_number * 1 * product_single_price * 1
+	const product_all_price = product_in_warehouse_number * 1 * product_single_price
 	const sql =
-		'update product set product_name = ?,product_category = ?,product_unit = ?,product_inwarehouse_number = ?,product_single_price = ?,product_all_price = ? ,product_update_time= ?,in_memo = ? where id = ?'
+		'update product set product_name = ?,product_category = ?,product_unit = ?,product_in_warehouse_number = ?,product_single_price = ?,product_all_price = ? ,product_update_time= ?,in_memo = ? where id = ?'
 	db.query(sql, [
 		product_name,
 		product_category,
 		product_unit,
-		product_inwarehouse_number,
+		product_in_warehouse_number,
 		product_single_price,
 		product_all_price,
 		product_update_time,
@@ -125,7 +125,7 @@ exports.editProduct = (req, res) => {
 
 // 获取产品列表
 exports.getProductList = (req, res) => {
-	const sql = 'select * from product where product_inwarehouse_number>= 0'
+	const sql = 'select * from product where product_in_warehouse_number>= 0'
 	db.query(sql, (err, result) => {
 		if (err) return res.cc(err)
 		res.send(result)
@@ -144,7 +144,7 @@ exports.applyOutProduct = (req, res) => {
 		apply_memo,
 	} = req.body
 	const product_apply_time = new Date()
-	const product_out_price = product_out_number * 1 * product_single_price * 1
+	const product_out_price = product_out_number * 1 * product_single_price
 	const sql0 = 'select * from product where product_out_id = ?'
 	db.query(sql0, product_out_id, (err, result) => {
 		if (result.length > 0) {
@@ -208,7 +208,7 @@ exports.auditProduct = (req, res) => {
 		product_out_price,
 		product_out_audit_person,
 		product_out_apply_person,
-		product_inwarehouse_number,
+		product_in_warehouse_number,
 		product_single_price,
 		product_out_number
 	} = req.body
@@ -217,9 +217,9 @@ exports.auditProduct = (req, res) => {
 		// // 产品出库总价
 		// product_out_price = product_out_number * 1 * product_single_price * 1
 		// 新的库存数量
-		const newWarehouseNumber = product_inwarehouse_number * 1 - product_out_number * 1
+		const newWarehouseNumber = product_in_warehouse_number * 1 - product_out_number * 1
 		// 新的库存总价
-		const product_all_price = newWarehouseNumber * 1 * product_single_price * 1
+		const product_all_price = newWarehouseNumber * product_single_price
 		const sql = 'insert into outproduct set ?'
 		db.query(sql, {
 			product_out_id,
@@ -232,7 +232,7 @@ exports.auditProduct = (req, res) => {
 		}, (err, result) => {
 			if (err) return res.cc(err)
 			const sql1 =
-				'update product set product_inwarehouse_number = ?,product_all_price = ?,product_out_status = NULL ,product_out_id = NULL,product_out_number =NULL,product_out_apply_person=NULL,apply_memo =NULL,product_out_price =NULL,product_apply_time = NULL where id = ?'
+				'update product set product_in_warehouse_number = ?,product_all_price = ?,product_out_status = NULL ,product_out_id = NULL,product_out_number =NULL,product_out_apply_person=NULL,apply_memo =NULL,product_out_price =NULL,product_apply_time = NULL where id = ?'
 			db.query(sql1, [newWarehouseNumber, product_all_price, req.body.id], (err, result) => {
 				if (err) return res.cc(err)
 				res.send({
@@ -285,7 +285,7 @@ exports.searchProductForOutId = (req, res) => {
 
 // 获取产品总数
 exports.getProductLength = (req, res) => {
-	const sql = 'select * from product where product_inwarehouse_number>= 0'
+	const sql = 'select * from product where product_in_warehouse_number>= 0'
 	db.query(sql, (err, result) => {
 		if (err) return res.cc(err)
 		res.send({
@@ -295,7 +295,7 @@ exports.getProductLength = (req, res) => {
 }
 
 // 获取申请出库产品总数
-exports.getApplyProdcutLength = (req, res) => {
+exports.getApplyProductLength = (req, res) => {
 	const sql = 'select * from product where product_out_status = "申请出库" || product_out_status = "否决"'
 	db.query(sql, (err, result) => {
 		if (err) return res.cc(err)
@@ -331,7 +331,7 @@ exports.getOutProductLength = (req, res) => {
 exports.returnProductListData = (req, res) => {
 	const number = (req.body.pager - 1) * 10
 	const sql =
-		`select * from product where product_inwarehouse_number>= 0 ORDER BY product_create_time limit 10 offset ${number} `
+		`select * from product where product_in_warehouse_number>= 0 ORDER BY product_create_time limit 10 offset ${number} `
 	db.query(sql, (err, result) => {
 		if (err) return res.cc(err)
 		res.send(result)

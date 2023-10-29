@@ -69,7 +69,7 @@ exports.returnLoginListData = (req, res) => {
 }
 
 // 清空登录日志 truncate
-exports.clearloginLogList = (req,res) =>{
+exports.clearLoginLogList = (req,res) =>{
 	const sql = 'truncate table login_log'
 	db.query(sql,(err,result)=>{
 		if (err) return res.cc(err)
