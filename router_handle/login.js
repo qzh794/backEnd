@@ -63,6 +63,45 @@ exports.register = (req, res) => {
     })
 }
 
+exports.login = (req, res) => {
+    const loginfo = req.body
+    // 第一步 查看数据表中有没有前端传过来的账号
+    const sql = 'select * from users where account = ?'
+    db.query(sql, loginfo.account, (err, results) => {
+        // 执行sql语句失败的情况 一般在数据库断开的情况会执行失败
+        if (err) return res.cc(err)
+        if (results.length !== 1) return res.cc('登录失败')
+        // 第二步 对前端传过来的密码进行解密
+        const compareResult = bcrypt.compareSync(loginfo.password, results[0].password)
+        if (!compareResult) {
+            return res.cc('登录失败')
+        }
+        // 第三步 对账号是否冻结做判定
+        if (results[0].status == 1) {
+            return res.cc('账号被冻结')
+        }
+        // 第四步 生成返回给前端的token
+        // 剔除加密后的密码,头像,创建时间,更新时间
+        const user = {
+            ...results[0],
+            password: '',
+            imageUrl: '',
+            create_time: '',
+            update_time: '',
+        }
+        // 设置token的有效时长 有效期为7个小时
+        const tokenStr = jwt.sign(user, jwtconfig.jwtSecretKey, {
+            expiresIn: '7h'
+        })
+        res.send({
+            results: results[0],
+            status: 0,
+            message: '登录成功',
+            token: 'Bearer ' + tokenStr,
+        })
+    })
+}
+
 // 超级管理员路由
 const superAdminRouter = [{
     name: 'home',
@@ -149,45 +188,6 @@ const superAdminRouter = [{
         component: 'login_log/index'
     },
 ]
-
-exports.login = (req, res) => {
-    const loginfo = req.body
-    // 第一步 查看数据表中有没有前端传过来的账号
-    const sql = 'select * from users where account = ?'
-    db.query(sql, loginfo.account, (err, results) => {
-        // 执行sql语句失败的情况 一般在数据库断开的情况会执行失败
-        if (err) return res.cc(err)
-        if (results.length !== 1) return res.cc('登录失败')
-        // 第二步 对前端传过来的密码进行解密
-        const compareResult = bcrypt.compareSync(loginfo.password, results[0].password)
-        if (!compareResult) {
-            return res.cc('登录失败')
-        }
-        // 第三步 对账号是否冻结做判定
-        if (results[0].status == 1) {
-            return res.cc('账号被冻结')
-        }
-        // 第四步 生成返回给前端的token
-        // 剔除加密后的密码,头像,创建时间,更新时间
-        const user = {
-            ...results[0],
-            password: '',
-            imageUrl: '',
-            create_time: '',
-            update_time: '',
-        }
-        // 设置token的有效时长 有效期为7个小时
-        const tokenStr = jwt.sign(user, jwtconfig.jwtSecretKey, {
-            expiresIn: '7h'
-        })
-        res.send({
-            results: results[0],
-            status: 0,
-            message: '登录成功',
-            token: 'Bearer ' + tokenStr,
-        })
-    })
-}
 
 // 用户管理员路由
 const userAdminRouter = [
@@ -323,25 +323,25 @@ const userRouter = [
     },
 ]
 
-exports.returnMenuList = (req, res) => {
+// 返回用户的路由列表，参数ID
+exports.returnMenuList = (req,res) =>{
     const sql = 'select identity from users where id = ?'
-    db.query(sql, req.body.id, (err, results) => {
+    db.query(sql,req.body.id,(err,result)=>{
         if (err) return res.cc(err)
         let menu = []
-        // 返回路由
-        if (results[0].identity == '超级管理员') {
+        if(result[0].identity=='超级管理员'){
             menu = superAdminRouter
         }
-        if (results[0].identity == '用户管理员') {
+        if(result[0].identity=='用户管理员'){
             menu = userAdminRouter
         }
-        if (results[0].identity == '产品管理员') {
+        if(result[0].identity=='产品管理员'){
             menu = productAdminRouter
         }
-        if (results[0].identity == '消息管理员') {
+        if(result[0].identity=='消息管理员'){
             menu = messageAdminRouter
         }
-        if (results[0].identity == '用户') {
+        if(result[0].identity=='用户'){
             menu = userRouter
         }
         res.send(menu)
