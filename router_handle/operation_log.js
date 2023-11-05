@@ -20,7 +20,7 @@ exports.operationLog = (req,res) =>{
 		if (err) return res.cc(err)
 		res.send({
 			status:0,
-			msg:'操作记录成功'
+			message:'操作记录成功'
 		})
 	})
 }
@@ -73,7 +73,7 @@ exports.clearOperationLogList = (req,res) =>{
 		if (err) return res.cc(err)
 		res.send({
 			status:0,
-			msg:'数据表清空成功'
+			message:'数据表清空成功'
 		})
 	})
 }

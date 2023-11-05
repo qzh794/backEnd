@@ -20,7 +20,6 @@ exports.loginLog = (req,res) =>{
 		if (err) return res.cc(err)
 		res.send({
 			status:0,
-			msg:'登录记录成功'
 		})
 	})
 }
@@ -75,7 +74,7 @@ exports.clearLoginLogList = (req,res) =>{
 		if (err) return res.cc(err)
 		res.send({
 			status:0,
-			msg:'数据表清空成功'
+			message:'数据表清空成功'
 		})
 	})
 }

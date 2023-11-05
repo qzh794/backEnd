@@ -65,7 +65,7 @@ exports.clickDelete = (req, res) => {
 			if (err) return res.cc(err)
 			res.send({
 				status: 0,
-				msg: '删减成功'
+				message: '删减成功'
 			})
 		})
 	})
@@ -87,7 +87,7 @@ exports.changeUserReadList = (req, res) => {
 		})
 		res.send({
 			status: 0,
-			msg: '更新成功'
+			message: '更新成功'
 		})
 	})
 }
@@ -110,7 +110,7 @@ exports.changeUserReadListButDelete = (req, res) => {
 		})
 		res.send({
 			status: 0,
-			msg: '更新成功'
+			message: '更新成功'
 		})
 	})
 }

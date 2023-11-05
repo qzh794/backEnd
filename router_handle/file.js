@@ -26,7 +26,7 @@ exports.uploadFile = (req, res) => {
 		if (results.length > 1) {
 			res.send({
 				status: 1,
-				msg: "文件名已存在"
+				message: "文件名已存在"
 			})
 		} else {
 			fs.renameSync('./public/upload/' + oldName, './public/upload/' + newName)
@@ -61,7 +61,7 @@ exports.bindFileAndUser = (req, res) => {
 		if (err) return res.cc(err)
 		res.send({
 			status: 0,
-			msg: '绑定成功'
+			message: '绑定成功'
 		})
 	})
 }
