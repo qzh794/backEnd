@@ -7,7 +7,7 @@ const joi = require('joi')
 // pattern是正则
 
 // 账号的验证
-const account = joi.string().alphanum().min(6).max(12).required()
+const account = joi.string().alphanum().min(5).max(12).required()
 // 密码的验证
 const password = joi.string().pattern(/^(?![0-9]+$)[a-z0-9]{1,50}$/).min(6).max(12).required()
 

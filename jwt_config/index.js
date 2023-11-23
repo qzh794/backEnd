@@ -1,3 +1,3 @@
 module.exports = {
-	jwtSecretKey:'qd_xiaowang',
+	jwtSecretKey:'full_stack_qzh',
 }
