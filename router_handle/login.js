@@ -71,7 +71,7 @@ exports.login = (req, res) => {
         // 执行sql语句失败的情况 一般在数据库断开的情况会执行失败
         if (err) return res.cc(err)
         if (results.length !== 1) return res.cc('登录失败')
-        // 第二步 对前端传过来的密码进行解密
+        // 第二步 密码与哈希比较，返回布尔值
         const compareResult = bcrypt.compareSync(loginfo.password, results[0].password)
         if (!compareResult) {
             return res.cc('登录失败')
