@@ -76,10 +76,7 @@ app.use('/dm', depMsgRouter)
 // 对不符合joi规则的情况进行报错
 app.use((err,req, res, next) => {
 	if (err instanceof Joi.ValidationError){
-		res.send({
-			status: 1,
-			message:'输入的数据不符合验证规则'
-		})
+		return res.cc(err)
 	}
 })
 
